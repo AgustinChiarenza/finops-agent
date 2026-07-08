@@ -19,7 +19,9 @@ def test_chunk_text_respects_min_length_and_overlap():
 
 
 def test_chunk_text_short_text_returns_single_chunk():
-    assert chunk_text("hello world") == ["hello world"]
+    # default min_len=50 would drop a tiny string; lower it explicitly.
+    assert chunk_text("hello world", min_len=1) == ["hello world"]
+    assert chunk_text("hello world") == []  # below default min_len=50
 
 
 def test_detect_tipo_finops_categories():

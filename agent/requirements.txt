@@ -2,14 +2,14 @@ fastapi==0.115.6
 uvicorn[standard]==0.34.0
 pydantic==2.10.4
 pydantic-settings==2.7.1
-httpx==0.28.1
+httpx>=0.28,<1
 python-dotenv==1.0.1
 
 # LLM orchestration across MaaS
-litellm==1.55.0
+litellm>=1.58,<2
 
 # RAG — vector store + embeddings + doc parsing (same shape as uade-rag)
-chromadb==0.5.20
-ollama==0.3.2
-pypdf==4.3.1
-python-docx==1.1.2
+chromadb>=0.5,<1
+ollama>=0.3,<1
+pypdf>=4.0
+python-docx>=1.1

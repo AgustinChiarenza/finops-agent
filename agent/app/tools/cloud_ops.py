@@ -28,9 +28,15 @@ class DashboardError(RuntimeError):
 
 
 class CloudOpsClient:
-    def __init__(self, base_url: str | None = None, timeout: float | None = None):
+    def __init__(
+        self,
+        base_url: str | None = None,
+        timeout: float | None = None,
+        transport: httpx.AsyncBaseTransport | None = None,
+    ):
         self.base_url = (base_url or settings.dashboard_api_base).rstrip("/")
         self.timeout = timeout or settings.dashboard_timeout_seconds
+        self._transport = transport  # injected for tests (httpx.MockTransport)
         self._cache: dict[str, tuple[float, Any]] = {}
         self._ttl = settings.dashboard_timeout_seconds  # reuse as a short cache TTL
 
@@ -43,7 +49,7 @@ class CloudOpsClient:
                 return entry[1]
         url = f"{self.base_url}{path}"
         try:
-            async with httpx.AsyncClient(timeout=self.timeout) as client:
+            async with httpx.AsyncClient(timeout=self.timeout, transport=self._transport) as client:
                 resp = await client.get(url, params=params)
         except httpx.HTTPError as exc:
             raise DashboardError(f"dashboard unreachable at {url}: {exc}") from exc

@@ -24,7 +24,6 @@ import re
 from dataclasses import dataclass, field
 from typing import Any
 
-from app.agent import prompts  # noqa: F401  (ensures import path)
 from app.prompts import finops as prompts_finops
 from app.orchestrator import orchestrator, OrchestrationError
 from app.rag import retriever
