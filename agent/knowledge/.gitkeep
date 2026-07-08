@@ -1,0 +1,15 @@
+# FinOps knowledge base (empty by default)
+#
+# Drop your tenant's cost-optimization material here and run:
+#     python -m app.rag.ingest
+#
+# Supported formats: .pdf .docx .md .txt
+# Suggested filenames so `detect_tipo` classifies them correctly:
+#   - pricing-huawei-ecs-2025.pdf        → pricing
+#   - well-architected-cost-optimization.pdf → well_architected
+#   - finops-playbook-rightsizing.md      → playbook
+#   - tagging-policy.md                   → policy
+#   - case-study-storage-tiering.pdf      → case_study
+#   - best-practices-reserved-instances.md → best_practice
+#
+# Nothing in this directory is committed except this README/.gitkeep.

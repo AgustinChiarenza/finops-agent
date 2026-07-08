@@ -1,0 +1,67 @@
+# FinOps Agent — full stack (definition only; not started by default).
+#
+# Wires together the Cloud Ops Dashboard (data + ops layer) and the FinOps
+# Agent (RAG + LiteLLM orchestrator), plus an Ollama container for local
+# embeddings. Start manually with:  docker compose up --build -d
+services:
+  dashboard-backend:
+    build: ./dashboard/backend
+    container_name: finops-dashboard-backend
+    ports:
+      - "8081:8000"
+    env_file: ./dashboard/backend/.env
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8000/api/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+
+  dashboard-frontend:
+    build: ./dashboard/frontend
+    container_name: finops-dashboard-frontend
+    ports:
+      - "8082:80"
+    depends_on:
+      dashboard-backend:
+        condition: service_healthy
+    restart: unless-stopped
+
+  ollama:
+    image: ollama/ollama:0.3.14
+    container_name: finops-ollama
+    ports:
+      - "11434:11434"
+    volumes:
+      - ollama-models:/root/.ollama
+    restart: unless-stopped
+    # Pull the embedding model on first start:
+    #   docker exec finops-ollama ollama pull nomic-embed-text
+
+  finops-agent:
+    build: ./agent
+    container_name: finops-agent
+    ports:
+      - "8083:8001"
+    env_file: ./agent/.env
+    environment:
+      - DASHBOARD_API_BASE=http://dashboard-backend:8000
+      - OLLAMA_HOST=http://ollama:11434
+    depends_on:
+      dashboard-backend:
+        condition: service_healthy
+      ollama:
+        condition: service_started
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8001/api/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+    volumes:
+      - ./agent/knowledge:/app/knowledge
+      - agent-chroma:/app/data
+
+volumes:
+  ollama-models:
+  agent-chroma:

@@ -1,0 +1,10 @@
+# Don't send these into the frontend Docker build context
+node_modules/
+dist/
+.vite/
+*.log
+.env
+.env.local
+*.md
+Dockerfile
+.dockerignore

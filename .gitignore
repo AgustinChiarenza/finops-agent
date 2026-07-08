@@ -1,0 +1,52 @@
+# Secrets — NEVER commit real credentials
+.env
+*.env.local
+agent/.env
+dashboard/backend/.env
+
+# Python
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+.venv/
+venv/
+*.egg-info/
+dist/
+build/
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+
+# Node
+node_modules/
+dashboard/frontend/dist/
+*.tsbuildinfo
+
+# RAG / vector store artifacts (generated at ingest time, tenant-specific)
+agent/data/
+agent/chroma_db/
+**/chroma_db/
+
+# Data artifacts (generated, tenant-specific)
+resource_inventory.json
+
+# Orchestrator cost logs (runtime)
+agent/logs/
+
+# Docker runtime
+*.log
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# OS
+.DS_Store
+Thumbs.db
+ehthumbs.db
+
+# Claude Code
+.claude/
